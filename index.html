@@ -127,7 +127,7 @@
 
   <div class="crest">⚽</div>
   <h1>Ayiti Chérie<br><span class="red">An Avan!</span></h1>
-  <p class="sub">Anvoye fòs ou bay seleksyon nasyonal la. Chak reyaksyon konte. Annou ankouraje yo ansanm !</p>
+  <p class="sub">Voye lanmou pou seleksyon nasyonal la. Chak reyaksyon konte. Ann ankouraje yo !</p>
 
   <div class="hero-count">
     <span class="num" id="totalNum">—</span>
@@ -138,12 +138,7 @@
     <button class="react" data-key="amour">
       <span class="heart-split">
         <svg viewBox="0 0 32 28" aria-hidden="true">
-          <defs>
-            <clipPath id="leftHalf"><rect x="0" y="0" width="16" height="28"/></clipPath>
-            <clipPath id="rightHalf"><rect x="16" y="0" width="16" height="28"/></clipPath>
-          </defs>
-          <path id="hp" d="M16 27S2 18.5 2 9.2C2 5 5.2 2 9 2c2.5 0 4.7 1.3 7 4 2.3-2.7 4.5-4 7-4 3.8 0 7 3 7 7.2C30 18.5 16 27 16 27Z" fill="#00209f" clip-path="url(#leftHalf)"/>
-          <use href="#hp" fill="#d21034" clip-path="url(#rightHalf)"/>
+          <path d="M16 27S2 18.5 2 9.2C2 5 5.2 2 9 2c2.5 0 4.7 1.3 7 4 2.3-2.7 4.5-4 7-4 3.8 0 7 3 7 7.2C30 18.5 16 27 16 27Z" fill="#ffffff"/>
         </svg>
       </span>
       <span class="name">J'aime</span>
@@ -175,11 +170,11 @@
   </div>
   <div class="comments" id="commentsList"></div>
 
-  <button class="share-btn" id="shareBtn">📣 Pataje · Anvoye fòs la</button>
+  <button class="share-btn" id="shareBtn">📣 Pataje · Voye fòs la</button>
   <p class="share-hint">Pataje ak fanmi ou ak zanmi ou — plis nou anpil, plis nou fò !</p>
 
   <div class="footer">
-    Fèt ak <b>♥</b> pou <b>Ayiti</b> 🇭🇹<br>
+    <b>L'Union fait la force</b> 🇭🇹<br>
     Ann sipòte seleksyon nasyonal la nan Coupe du Monde lan.
   </div>
 </div>
@@ -193,8 +188,8 @@
    ⚠️  À REMPLIR — colle tes 2 clés Supabase ici :
    (Project Settings → API)
    ============================================================ */
-const SUPABASE_URL = https://krczvkxvhzhckyyxpqqb.supabase.co
-const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyY3p2a3h2aHpoY2t5eXhwcXFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjE5ODksImV4cCI6MjA5NTI5Nzk4OX0.zE-P5DPTcgzTqy9F7kiP7XyL4xt-A32aPKHmVCekV5M
+const SUPABASE_URL = "https://krczvkxvhzhckyyxpqqb.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyY3p2a3h2aHpoY2t5eXhwcXFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjE5ODksImV4cCI6MjA5NTI5Nzk4OX0.zE-P5DPTcgzTqy9F7kiP7XyL4xt-A32aPKHmVCekV5M";
 /* ============================================================ */
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
