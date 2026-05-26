@@ -214,6 +214,25 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/* ---------- Empreinte visiteur (1 vote par personne) ----------
+   Identifiant unique stocké sur l'appareil. Permet à la base de
+   refuser tout double vote. */
+function getVisitorId(){
+  try{
+    let id = localStorage.getItem('ayiti_vid');
+    if(!id){
+      id = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2,12);
+      localStorage.setItem('ayiti_vid', id);
+    }
+    return id;
+  }catch(e){
+    // si localStorage indisponible, on génère un id de session
+    if(!window._vid) window._vid = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2,12);
+    return window._vid;
+  }
+}
+const VISITOR = getVisitorId();
+
 const state = { reactions:{amour:0,force:0,feu:0,priye:0}, comments:[], shares:0, my:{} };
 const $ = s => document.querySelector(s);
 
@@ -257,6 +276,17 @@ async function load(){
     reacts.forEach(r=> state.reactions[r.key]=Number(r.count));
     state.comments = cmts.map(c=>({who:c.who,txt:c.txt}));
     const sh = counters.find(c=>c.key==='shares'); state.shares = sh?Number(sh.count):0;
+    // restaurer les réactions déjà faites par ce visiteur
+    try{
+      const raw = localStorage.getItem('ayiti_my');
+      if(raw) state.my = JSON.parse(raw) || {};
+      Object.keys(state.my).forEach(k=>{
+        if(state.my[k]){
+          const b=document.querySelector(`.react[data-key="${k}"]`);
+          if(b) b.classList.add('active');
+        }
+      });
+    }catch(e){}
     setConn(true); render();
   }catch(err){
     console.error(err); setConn(false);
@@ -279,12 +309,12 @@ function subscribe(){
     .subscribe();
 }
 
-/* ---------- Réactions ---------- */
+/* ---------- Réactions (Option A : 1 par personne) ---------- */
 document.querySelectorAll('.react').forEach(btn=>{
   btn.addEventListener('click', async (e)=>{
     const key=btn.dataset.key;
     const adding = !state.my[key];
-    // maj optimiste
+    // maj optimiste de l'affichage
     state.my[key]=adding; btn.classList.toggle('active',adding);
     state.reactions[key]+= adding?1:-1;
     if(adding){
@@ -292,20 +322,37 @@ document.querySelectorAll('.react').forEach(btn=>{
       spawnFloat(e.clientX,e.clientY, btn.querySelector('.ico')?.textContent || '❤️');
     }
     render();
-    const fn = adding ? 'increment_reaction' : 'decrement_reaction';
-    const {error} = await sb.rpc(fn,{reaction_key:key});
-    if(error){ console.error(error); toast("Pa anrejistre. Verifye koneksyon an."); }
+    try{ localStorage.setItem('ayiti_my', JSON.stringify(state.my)); }catch(e){}
+    // appel sécurisé à la base
+    const fn = adding ? 'vote_reaction' : 'unvote_reaction';
+    const {error} = await sb.rpc(fn,{ p_visitor:VISITOR, p_reaction:key });
+    if(error){
+      console.error(error);
+      // revert en cas d'échec
+      state.my[key]=!adding; btn.classList.toggle('active',!adding);
+      state.reactions[key]+= adding?-1:1;
+      try{ localStorage.setItem('ayiti_my', JSON.stringify(state.my)); }catch(e){}
+      render();
+      toast("Pa anrejistre. Eseye ankò.");
+    }
   });
 });
 
-/* ---------- Commentaire ---------- */
+/* ---------- Commentaire (Option A + anti-spam) ---------- */
 $("#cmtSend").addEventListener('click', async ()=>{
   const txt=$("#cmtText").value.trim(); const who=$("#cmtName").value.trim()||'Anonim';
   if(!txt){ toast("Ekri yon mesaj anvan 🙂"); return; }
   $("#cmtSend").disabled=true;
-  const {error}=await sb.from('comments').insert({who,txt});
+  const {error}=await sb.rpc('add_comment',{ p_visitor:VISITOR, p_who:who, p_txt:txt });
   $("#cmtSend").disabled=false;
-  if(error){ console.error(error); toast("Pa rive voye. Eseye ankò."); return; }
+  if(error){
+    console.error(error);
+    const m = (error.message||'');
+    const msg = (m.includes('deja kite') || m.includes('jodi a'))
+      ? "Ou deja kite yon mesaj jodi a. Tounen demen 🇭🇹"
+      : "Pa rive voye. Eseye ankò.";
+    toast(msg); return;
+  }
   $("#cmtText").value=''; $("#cmtName").value='';
   toast("Mèsi pou ankourajman an! 🇭🇹");
   // le commentaire arrivera via realtime
