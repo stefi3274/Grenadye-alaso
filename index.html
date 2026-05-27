@@ -374,26 +374,53 @@ $("#cmtSend").addEventListener('click', async ()=>{
 });
 
 /* ---------- Partage (natif téléphone) ---------- */
+
+// Au démarrage : envoie les partages en attente du dernier rechargement
+async function flushPendingShares(){
+  try{
+    const pending = parseInt(localStorage.getItem('ayiti_pending_shares')||'0');
+    if(pending > 0){
+      localStorage.removeItem('ayiti_pending_shares');
+      for(let i=0;i<pending;i++){
+        await sb.rpc('increment_counter',{counter_key:'shares'});
+      }
+    }
+  }catch(e){}
+}
+
 $("#shareBtn").addEventListener('click', async ()=>{
   const shareData={ title:"Ayiti Chérie · An Avan!",
     text:"Fè mesaj nou rive jwenn jwè yo. 🇭🇹⚽",
     url:location.href };
-  // On compte le partage AVANT d'ouvrir (sinon le navigateur quitte
-  // la page et l'incrément n'a pas le temps de partir).
+
+  // On enregistre le partage dans localStorage AVANT d'ouvrir WhatsApp.
+  // Même si le navigateur suspend la page, localStorage est persistant.
+  // Le compteur sera envoyé à Supabase au prochain chargement de la page.
+  try{
+    const pending = parseInt(localStorage.getItem('ayiti_pending_shares')||'0');
+    localStorage.setItem('ayiti_pending_shares', pending+1);
+  }catch(e){}
+
+  // Mise à jour optimiste de l'affichage
   state.shares++; render();
-  sb.rpc('increment_counter',{counter_key:'shares'}).then(({error})=>{
-    if(error){ console.error(error); }
-  });
+
+  // On tente aussi d'envoyer maintenant (marche si la page reste active)
+  sb.rpc('increment_counter',{counter_key:'shares'}).then(()=>{
+    // Si ça marche maintenant, on vide le pending
+    try{ localStorage.removeItem('ayiti_pending_shares'); }catch(e){}
+  }).catch(()=>{});
+
   try{
     if(navigator.share){ await navigator.share(shareData); }
     else { await navigator.clipboard.writeText(shareData.text+" "+shareData.url); toast("Lyen an kopye! 📋"); }
-  }catch(err){ /* partage annulé par l'utilisateur — le compteur reste, ce n'est pas grave */ }
+  }catch(err){ /* partage annulé */ }
 });
 
 /* ---------- Démarrage ---------- */
 render();
 load();
 subscribe();
+flushPendingShares();
 </script>
 </body>
 </html>
