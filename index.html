@@ -178,8 +178,7 @@
   </div>
 
   <div class="ticker">
-    <div class="pill"><b id="cntComments">0</b><span>Commentaires</span></div>
-    <div class="pill"><b id="cntShares">0</b><span>Partages</span></div>
+    <div class="pill" style="max-width:260px;margin:0 auto;"><b id="cntComments">0</b><span>Commentaires</span></div>
   </div>
 
   <div class="section-title">Messages de soutien</div>
@@ -235,7 +234,7 @@ function getVisitorId(){
 }
 const VISITOR = getVisitorId();
 
-const state = { reactions:{amour:0,force:0,feu:0,priye:0}, comments:[], shares:0, my:{} };
+const state = { reactions:{amour:0,force:0,feu:0,priye:0}, comments:[], my:{} };
 const $ = s => document.querySelector(s);
 
 const toast = (msg)=>{ const t=$("#toast"); t.textContent=msg; t.classList.add("show");
@@ -253,7 +252,6 @@ function render(){
   $("#totalNum").textContent = fmt(total());
   document.querySelectorAll('[data-cnt]').forEach(el=>{ el.textContent=fmt(state.reactions[el.dataset.cnt]); });
   $("#cntComments").textContent = fmt(state.comments.length);
-  $("#cntShares").textContent = fmt(state.shares);
   const list=$("#commentsList");
   if(state.comments.length===0){
     list.innerHTML = '<div class="empty">Sois le premier à laisser un message 🇭🇹</div>';
@@ -282,15 +280,13 @@ function spawnFloat(x,y,emoji){
 /* ---------- Chargement initial ---------- */
 async function load(){
   try{
-    const [{data:reacts,error:e1},{data:cmts,error:e2},{data:counters,error:e3}] = await Promise.all([
+    const [{data:reacts,error:e1},{data:cmts,error:e2}] = await Promise.all([
       sb.from('reactions').select('*'),
       sb.from('comments').select('*').order('created_at',{ascending:false}).limit(100),
-      sb.from('counters').select('*')
     ]);
-    if(e1||e2||e3) throw (e1||e2||e3);
+    if(e1||e2) throw (e1||e2);
     reacts.forEach(r=> state.reactions[r.key]=Number(r.count));
     state.comments = cmts.map(c=>({who:c.who,txt:c.txt}));
-    const sh = counters.find(c=>c.key==='shares'); state.shares = sh?Number(sh.count):0;
     // restaurer les réactions déjà faites par ce visiteur
     try{
       const raw = localStorage.getItem('ayiti_my');
@@ -317,9 +313,6 @@ function subscribe(){
     })
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'comments'},payload=>{
       const c=payload.new; state.comments.unshift({who:c.who,txt:c.txt}); render();
-    })
-    .on('postgres_changes',{event:'*',schema:'public',table:'counters'},payload=>{
-      const c=payload.new; if(c&&c.key==='shares') state.shares=Number(c.count); render();
     })
     .subscribe();
 }
@@ -374,42 +367,10 @@ $("#cmtSend").addEventListener('click', async ()=>{
 });
 
 /* ---------- Partage (natif téléphone) ---------- */
-
-// Au démarrage : envoie les partages en attente du dernier rechargement
-async function flushPendingShares(){
-  try{
-    const pending = parseInt(localStorage.getItem('ayiti_pending_shares')||'0');
-    if(pending > 0){
-      localStorage.removeItem('ayiti_pending_shares');
-      for(let i=0;i<pending;i++){
-        await sb.rpc('increment_counter',{counter_key:'shares'});
-      }
-    }
-  }catch(e){}
-}
-
 $("#shareBtn").addEventListener('click', async ()=>{
   const shareData={ title:"Ayiti Chérie · An Avan!",
     text:"Fè mesaj nou rive jwenn jwè yo. 🇭🇹⚽",
     url:location.href };
-
-  // On enregistre le partage dans localStorage AVANT d'ouvrir WhatsApp.
-  // Même si le navigateur suspend la page, localStorage est persistant.
-  // Le compteur sera envoyé à Supabase au prochain chargement de la page.
-  try{
-    const pending = parseInt(localStorage.getItem('ayiti_pending_shares')||'0');
-    localStorage.setItem('ayiti_pending_shares', pending+1);
-  }catch(e){}
-
-  // Mise à jour optimiste de l'affichage
-  state.shares++; render();
-
-  // On tente aussi d'envoyer maintenant (marche si la page reste active)
-  sb.rpc('increment_counter',{counter_key:'shares'}).then(()=>{
-    // Si ça marche maintenant, on vide le pending
-    try{ localStorage.removeItem('ayiti_pending_shares'); }catch(e){}
-  }).catch(()=>{});
-
   try{
     if(navigator.share){ await navigator.share(shareData); }
     else { await navigator.clipboard.writeText(shareData.text+" "+shareData.url); toast("Lyen an kopye! 📋"); }
@@ -420,7 +381,6 @@ $("#shareBtn").addEventListener('click', async ()=>{
 render();
 load();
 subscribe();
-flushPendingShares();
 </script>
 </body>
 </html>
