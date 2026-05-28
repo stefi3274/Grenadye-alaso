@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>À propos · Ayiti Chérie</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bleu:#00209f;--rouge:#d21034;--or:#f4c542;--noir:#0a0e1f;--creme:#fbf7ec;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{overflow-x:hidden;}
+  body{font-family:'Archivo',sans-serif;background:var(--noir);color:var(--creme);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  .bg{position:fixed;inset:0;z-index:0;background-image:url("bg.jpg");background-size:cover;background-position:center;}
+  .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,32,159,.65) 0%,rgba(10,14,31,.75) 50%,rgba(210,16,52,.65) 100%);}
+  .wrap{position:relative;z-index:1;width:100%;max-width:600px;padding:28px 24px 60px;}
+
+  /* Nav retour */
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--or);font-weight:800;font-size:14px;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;margin-bottom:28px;}
+  .back:hover{opacity:.8;}
+
+  /* Header page */
+  .page-badge{display:inline-block;background:rgba(0,0,0,.3);border:1px solid rgba(244,197,66,.4);color:var(--or);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;padding:6px 16px;border-radius:99px;margin-bottom:16px;}
+  h1{font-family:'Anton',sans-serif;font-size:clamp(36px,10vw,52px);text-transform:uppercase;line-height:.95;text-shadow:0 4px 18px rgba(0,0,0,.5);margin-bottom:6px;}
+  h1 .or{color:var(--or);}
+  .tagline{font-size:16px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:36px;line-height:1.5;}
+
+  /* Sections */
+  .section{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:24px;margin-bottom:20px;}
+  .section h2{font-family:'Anton',sans-serif;font-size:20px;text-transform:uppercase;color:var(--or);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+  .section p{font-size:15px;line-height:1.65;color:rgba(255,255,255,.9);}
+  .section p+p{margin-top:12px;}
+
+  /* Card SteFi */
+  .stefi-card{background:linear-gradient(135deg,rgba(0,32,159,.5),rgba(210,16,52,.4));border:1.5px solid rgba(244,197,66,.4);border-radius:20px;padding:26px;margin-bottom:20px;text-align:center;}
+  .stefi-card .logo{font-family:'Anton',sans-serif;font-size:36px;color:var(--or);margin-bottom:8px;}
+  .stefi-card h2{font-family:'Anton',sans-serif;font-size:26px;text-transform:uppercase;margin-bottom:6px;}
+  .stefi-card p{font-size:14px;color:rgba(255,255,255,.8);line-height:1.5;}
+  .stefi-card .tag{display:inline-block;background:rgba(244,197,66,.15);border:1px solid rgba(244,197,66,.4);color:var(--or);font-size:12px;font-weight:700;padding:4px 14px;border-radius:99px;margin-top:12px;letter-spacing:.06em;}
+
+  /* Valeurs */
+  .values{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+  .val{background:rgba(0,0,0,.25);border-radius:14px;padding:16px;text-align:center;}
+  .val .ico{font-size:28px;margin-bottom:6px;}
+  .val h4{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--or);}
+  .val p{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px;line-height:1.4;}
+
+  /* Footer */
+  .foot{text-align:center;margin-top:32px;font-size:12px;color:rgba(255,255,255,.5);}
+  .foot b{color:var(--or);}
+  .foot a{color:var(--or);text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+
+  <a class="back" href="index.html">← Retounen</a>
+
+  <div class="page-badge">🇭🇹 Ayiti Chérie</div>
+  <h1>À <span class="or">propos</span></h1>
+  <p class="tagline">Deye kòz la — men ki moun nou ye ak poukisa nou fè sa.</p>
+
+  <!-- Le projet -->
+  <div class="section">
+    <h2>🏟️ Le projet</h2>
+    <p>Ayiti Chérie est une plateforme digitale de mobilisation créée pour rassembler les supporters de la sélection nationale haïtienne — les Grenadiers — autour de la Coupe du Monde.</p>
+    <p>Le concept est simple : chaque Haïtien, qu'il soit au pays ou dans la diaspora, peut envoyer sa force, son amour et ses encouragements aux joueurs. Chaque réaction compte. Chaque message porte une voix.</p>
+    <p>Parce que derrière une équipe, il y a tout un peuple. <strong>L'Union fait la force.</strong> 🇭🇹</p>
+  </div>
+
+  <!-- SteFi Services -->
+  <div class="stefi-card">
+    <div class="logo">SteFi</div>
+    <h2>SteFi Services</h2>
+    <p>Développement Web & Solutions Digitales<br>Port-au-Prince, Haïti</p>
+    <span class="tag">Éditeur du site</span>
+  </div>
+
+  <!-- Notre mission -->
+  <div class="section">
+    <h2>🎯 Notre mission</h2>
+    <p>SteFi Services accompagne les particuliers, entrepreneurs et organisations dans leur transformation digitale en Haïti. Nous concevons des solutions web adaptées aux réalités locales — rapides, accessibles et efficaces.</p>
+    <p>Ayiti Chérie est notre contribution à la fierté nationale. Un projet conçu avec passion pour mettre la technologie au service du peuple haïtien.</p>
+  </div>
+
+  <!-- Valeurs -->
+  <div class="section">
+    <h2>💎 Nos valeurs</h2>
+    <div class="values">
+      <div class="val"><div class="ico">🇭🇹</div><h4>Fierté</h4><p>On travaille pour Haïti, par amour du pays.</p></div>
+      <div class="val"><div class="ico">🤝</div><h4>Engagement</h4><p>On s'implique à fond dans chaque projet.</p></div>
+      <div class="val"><div class="ico">💡</div><h4>Innovation</h4><p>Des solutions modernes pour des défis réels.</p></div>
+      <div class="val"><div class="ico">🔒</div><h4>Intégrité</h4><p>Honnêtes dans nos chiffres et nos promesses.</p></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>SteFi Services</b> · Port-au-Prince, Haïti<br>
+    <a href="contact.html">Kontakte nou</a> &nbsp;·&nbsp;
+    <a href="mentions-legales.html">Mentions légales</a>
+  </div>
+
+</div>
+</body>
+</html>

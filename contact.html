@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact · Ayiti Chérie</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bleu:#00209f;--rouge:#d21034;--or:#f4c542;--noir:#0a0e1f;--creme:#fbf7ec;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{overflow-x:hidden;}
+  body{font-family:'Archivo',sans-serif;background:var(--noir);color:var(--creme);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  .bg{position:fixed;inset:0;z-index:0;background-image:url("bg.jpg");background-size:cover;background-position:center;}
+  .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,32,159,.65) 0%,rgba(10,14,31,.75) 50%,rgba(210,16,52,.65) 100%);}
+  .wrap{position:relative;z-index:1;width:100%;max-width:600px;padding:28px 24px 60px;}
+  .back{display:inline-flex;align-items:center;gap:8px;color:var(--or);font-weight:800;font-size:14px;text-decoration:none;letter-spacing:.04em;text-transform:uppercase;margin-bottom:28px;}
+  .back:hover{opacity:.8;}
+  .page-badge{display:inline-block;background:rgba(0,0,0,.3);border:1px solid rgba(244,197,66,.4);color:var(--or);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;padding:6px 16px;border-radius:99px;margin-bottom:16px;}
+  h1{font-family:'Anton',sans-serif;font-size:clamp(36px,10vw,52px);text-transform:uppercase;line-height:.95;text-shadow:0 4px 18px rgba(0,0,0,.5);margin-bottom:6px;}
+  h1 .or{color:var(--or);}
+  .tagline{font-size:16px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:36px;line-height:1.5;}
+
+  /* Cartes de contact */
+  .contact-grid{display:flex;flex-direction:column;gap:16px;margin-bottom:28px;}
+  .contact-card{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:20px;padding:22px;display:flex;align-items:center;gap:18px;text-decoration:none;color:var(--creme);transition:background .2s ease,border-color .2s ease;}
+  .contact-card:active{background:rgba(244,197,66,.12);border-color:var(--or);}
+  .contact-card .ico{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:26px;flex-shrink:0;}
+  .ico-email{background:linear-gradient(135deg,var(--bleu),#1b3bd4);}
+  .ico-phone{background:linear-gradient(135deg,#1d9a5c,#0f5132);}
+  .ico-wa{background:linear-gradient(135deg,#25d366,#128c7e);}
+  .contact-card .info h3{font-weight:800;font-size:16px;margin-bottom:2px;}
+  .contact-card .info p{font-size:14px;color:rgba(255,255,255,.75);}
+  .contact-card .arrow{margin-left:auto;color:var(--or);font-size:20px;font-weight:800;}
+
+  /* Formulaire */
+  .section{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:24px;margin-bottom:20px;}
+  .section h2{font-family:'Anton',sans-serif;font-size:20px;text-transform:uppercase;color:var(--or);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+  .form-group{margin-bottom:14px;}
+  .form-group label{display:block;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:6px;}
+  .form-group input,.form-group textarea,.form-group select{width:100%;background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 14px;color:var(--creme);font-family:'Archivo',sans-serif;font-size:15px;}
+  .form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,.4);}
+  .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--or);}
+  .form-group textarea{resize:none;min-height:100px;}
+  .form-group select option{background:var(--noir);color:var(--creme);}
+  .btn-send{width:100%;background:var(--or);color:var(--noir);border:none;font-family:'Anton',sans-serif;font-size:18px;letter-spacing:.04em;padding:16px;border-radius:14px;cursor:pointer;text-transform:uppercase;margin-top:6px;transition:transform .12s ease;}
+  .btn-send:active{transform:scale(.97);}
+
+  /* Note sponsor */
+  .sponsor-note{background:linear-gradient(135deg,rgba(0,32,159,.4),rgba(210,16,52,.3));border:1.5px solid rgba(244,197,66,.35);border-radius:18px;padding:20px;margin-bottom:20px;text-align:center;}
+  .sponsor-note h3{font-family:'Anton',sans-serif;font-size:20px;text-transform:uppercase;color:var(--or);margin-bottom:8px;}
+  .sponsor-note p{font-size:14px;color:rgba(255,255,255,.85);line-height:1.5;}
+
+  .foot{text-align:center;margin-top:32px;font-size:12px;color:rgba(255,255,255,.5);}
+  .foot b{color:var(--or);}
+  .foot a{color:var(--or);text-decoration:none;}
+
+  /* Toast */
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--noir);color:#fff;border:1px solid var(--or);padding:13px 22px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:all .3s ease;z-index:50;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+
+  <a class="back" href="index.html">← Retounen</a>
+
+  <div class="page-badge">🇭🇹 Ayiti Chérie</div>
+  <h1><span class="or">Kontakte</span> nou</h1>
+  <p class="tagline">Yon kesyon, yon pawòl, yon patenarya? Nou la pou ou.</p>
+
+  <!-- Coordonnées directes -->
+  <div class="contact-grid">
+    <a class="contact-card" href="mailto:stefi3274@gmail.com">
+      <div class="ico ico-email">✉️</div>
+      <div class="info"><h3>Email</h3><p>stefi3274@gmail.com</p></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="contact-card" href="tel:+50955108873">
+      <div class="ico ico-phone">📞</div>
+      <div class="info"><h3>Téléphone</h3><p>+509 55108873</p></div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="contact-card" href="https://wa.me/50955108873" target="_blank">
+      <div class="ico ico-wa">💬</div>
+      <div class="info"><h3>WhatsApp</h3><p>+509 55108873</p></div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <!-- Note sponsors -->
+  <div class="sponsor-note">
+    <h3>💼 Sponsors & Partenariats</h3>
+    <p>Vous souhaitez associer votre marque à la campagne de soutien aux Grenadiers ? Contactez-nous par email ou WhatsApp pour recevoir notre dossier partenaires.</p>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="section">
+    <h2>✍️ Écrivez-nous</h2>
+    <div class="form-group">
+      <label>Votre nom</label>
+      <input type="text" id="f_name" placeholder="Jean-Robert Pierre">
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="f_email" placeholder="vous@example.com">
+    </div>
+    <div class="form-group">
+      <label>Sujet</label>
+      <select id="f_subject">
+        <option value="">Choisir un sujet...</option>
+        <option value="partenariat">Partenariat / Sponsoring</option>
+        <option value="presse">Presse / Médias</option>
+        <option value="suggestion">Suggestion</option>
+        <option value="autre">Autre</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Message</label>
+      <textarea id="f_msg" placeholder="Votre message..."></textarea>
+    </div>
+    <button class="btn-send" id="sendBtn">Voye mesaj la</button>
+  </div>
+
+  <div class="foot">
+    <b>SteFi Services</b> · Port-au-Prince, Haïti<br>
+    <a href="apropos.html">À propos</a> &nbsp;·&nbsp;
+    <a href="mentions-legales.html">Mentions légales</a>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  const toast=(msg)=>{const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);};
+  document.getElementById('sendBtn').addEventListener('click',()=>{
+    const name=document.getElementById('f_name').value.trim();
+    const email=document.getElementById('f_email').value.trim();
+    const msg=document.getElementById('f_msg').value.trim();
+    if(!name||!email||!msg){toast('Ranpli tout chan yo tanpri 🙏');return;}
+    // Ouvrir le client mail avec les infos pré-remplies
+    const subject=encodeURIComponent(document.getElementById('f_subject').value||'Message depuis Ayiti Chérie');
+    const body=encodeURIComponent(`Nom: ${name}\n\n${msg}`);
+    window.location.href=`mailto:stefi3274@gmail.com?subject=${subject}&body=${body}`;
+    toast('Mèsi! Nou pral reponn ou rapidman 🇭🇹');
+  });
+</script>
+</body>
+</html>
